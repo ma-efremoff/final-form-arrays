@@ -12,14 +12,15 @@ function restoreFunctions(
       blur: state.fields[key].blur || (backupState.fields[key] && backupState.fields[key].blur),
       focus: state.fields[key].focus || (backupState.fields[key] && backupState.fields[key].focus)
     }
-    if (!state.fields[key].change) {
-      delete state.fields[key].change;
-    }
-    if (!state.fields[key].blur) {
-      delete state.fields[key].blur;
-    }
-    if (!state.fields[key].focus) {
-      delete state.fields[key].focus;
+
+    const field = state.fields[key];
+    if (!field.change || !field.blur || !field.focus) {
+      // If at least one of callbacks is not defined,
+      // then probably state.fields[key] is not exist,
+      // so we remove the field to allow its reinitialization at
+      // the moment of registration
+      // (see comments from moveFieldState.js)
+      delete state.fields[key];
     }
   })
 }

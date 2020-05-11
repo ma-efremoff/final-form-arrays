@@ -19,14 +19,14 @@ function moveFieldState(
     focus: oldState.fields[destKey] && oldState.fields[destKey].focus,
     lastFieldState: undefined // clearing lastFieldState forces renotification
   }
-  if (!state.fields[destKey].change) {
-    delete state.fields[destKey].change;
-  }
-  if (!state.fields[destKey].blur) {
-    delete state.fields[destKey].blur;
-  }
-  if (!state.fields[destKey].focus) {
-    delete state.fields[destKey].focus;
+
+  const field = state.fields[key];
+  if (!field.change || !field.blur || !field.focus) {
+    // If at least one of callbacks is not defined,
+    // then probably state.fields[key] is not exist,
+    // so we remove the field to allow its reinitialization at
+    // the moment of registration
+    delete state.fields[key];
   }
 }
 
